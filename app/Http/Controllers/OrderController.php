@@ -11,12 +11,18 @@ class OrderController extends Controller
     public function index()
 {
     try {
-        // Assuming the Order model has a relationship with OrderItem
-        $orders = Order::with('items')->get(); // Load the order items with the orders
+        // Fetch all orders with their items, ordered by most recent first
+        $orders = Order::with('items')->orderBy('created_at', 'DESC')->get();
+
+        // Group orders by provider_name
+        $groupedOrders = $orders->groupBy('provider_name');
+
+        // Sort the grouped orders by provider name (alphabetical order)
+        $sortedGroupedOrders = $groupedOrders->sortKeys();
 
         return response()->json([
             'success' => true,
-            'data' => $orders
+            'data' => $sortedGroupedOrders // Grouped and sorted data by provider_name
         ], 200);
     } catch (\Exception $e) {
         return response()->json([
@@ -43,7 +49,8 @@ class OrderController extends Controller
         // Call the action with the validated data
         $order = CreateOrderAction::run($validated);
 
-        return response()->json(['message' => 'Order submitted successfully!', 'order' => $order], 201);
-   
+        return response()->json(['success' => true, 'message' => 'Order submitted successfully!', 'order' => $order], 201);
+
     }
+
 }
