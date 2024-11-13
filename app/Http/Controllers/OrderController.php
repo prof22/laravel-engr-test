@@ -22,7 +22,7 @@ class OrderController extends Controller
 
         return response()->json([
             'success' => true,
-            'data' => $sortedGroupedOrders // Grouped and sorted data by provider_name
+            'data' => $orders // Grouped and sorted data by provider_name
         ], 200);
     } catch (\Exception $e) {
         return response()->json([

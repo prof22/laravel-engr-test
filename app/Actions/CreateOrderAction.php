@@ -49,8 +49,16 @@ class CreateOrderAction
         }
 
         // Send notification email to HMO
-        Mail::to($hmo->email)->send(new NewOrderBatchNotification($order));
+        try {
+            Mail::to($hmo->email)->send(new NewOrderBatchNotification($order));
+        } catch (\Exception $e) {
+            // Log the email failure but continue processing
+            \Log::error("Order created, but failed to send email: " . $e->getMessage());
 
+            // Optionally, you could log more details if needed.
+        }
+
+        // Return the order even if email sending fails
         return $order;
     }
 }
