@@ -53,7 +53,7 @@ class CreateOrderAction
             Mail::to($hmo->email)->send(new NewOrderBatchNotification($order));
         } catch (\Exception $e) {
             // Log the email failure but continue processing
-            \Log::error("Order created, but failed to send email: " . $e->getMessage());
+            \Log::error("Order created, but failed to send email:.. " . $e->getMessage());
 
             // Optionally, you could log more details if needed.
         }
